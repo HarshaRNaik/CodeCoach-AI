@@ -2,6 +2,7 @@ import "dotenv/config";
 import express, { type ErrorRequestHandler, type RequestHandler } from "express";
 import { findChallenge } from "./challenges.js";
 import { explainCode, generateHint } from "./services/aiService.js";
+import { AiProviderError } from "./services/aiService.js";
 import { evaluateChallenge } from "../shared/evaluator.js";
 import { explainRequestSchema, hintRequestSchema, runRequestSchema, type ExplanationResponse, type HintResponse, type ProgrammingLanguage } from "./validation/schemas.js";
 
@@ -47,6 +48,7 @@ export function createApp(aiService: AiService = defaultAiService) {
   const errorHandler: ErrorRequestHandler = (error, _request, response, next) => {
     void next;
     if (error instanceof SyntaxError) { response.status(400).json({ error: "Request body must be valid JSON." }); return; }
+    if (error instanceof AiProviderError && error.kind === "rate-limit") { response.status(429).json({ error: "AI service is temporarily busy. Please try again." }); return; }
     if (error instanceof Error && error.name === "AbortError") { response.status(504).json({ error: "The tutor request timed out. Please try again." }); return; }
     if (error instanceof Error && error.message.includes("GEMINI_API_KEY")) { response.status(500).json({ error: "AI tutoring is not configured." }); return; }
     response.status(500).json({ error: "The AI service could not process this request." });

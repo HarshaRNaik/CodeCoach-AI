@@ -2,6 +2,19 @@
 
 CodeCoach AI is a small coding-practice workspace with eight challenges, a controlled deterministic evaluator, and a server-side Gemini tutor for progressive hints and code explanations. Learners can write in JavaScript, TypeScript, Python, Java, C++, or Go.
 
+## Features
+
+- Eight beginner-friendly coding challenges.
+- Six selectable programming languages with language-specific starter code.
+- In-browser editor with local persistence.
+- Deterministic challenge evaluation through `/api/run`.
+- Progressive Gemini hints and structured code explanations.
+- Progress tracking, profile reset, responsive layout, loading states, and safe API errors.
+
+## Tech stack
+
+React, TypeScript, Vite, Express, Zod, the official `@google/genai` SDK, Vitest, Supertest, and Vercel serverless functions.
+
 ## Run locally
 
 1. Install dependencies: `npm install`
@@ -26,6 +39,33 @@ The API validates request bodies and Gemini JSON responses with Zod. The Gemini 
 The browser uses `src/lib/api.ts` for tutor requests. Express validates the request, resolves challenge metadata, and delegates Gemini work to `server/services/aiService.ts`. Gemini is instructed to respond with a schema-constrained JSON object, which is parsed and validated before it reaches the browser. Code execution remains separate in the frontend's controlled evaluator and is never sent to Gemini for execution.
 
 Code is saved separately for each challenge and language in localStorage.
+
+### AI prompt design
+
+The Gemini service receives the challenge description, selected language, and current learner code. Hint prompts explicitly select a conceptual, strategic, or implementation-oriented level and prohibit immediately replacing the learner's work. Explanation prompts request a summary, ordered steps, genuine issues, and a learning takeaway. Gemini is configured for JSON output and every response is validated with Zod before it reaches the browser.
+
+## Known limitations
+
+- The evaluator is a controlled pattern-based evaluator for the supported challenge set; it does not execute arbitrary code.
+- Gemini quota and provider availability can produce HTTP 429 or other safe API errors.
+- Lighthouse and axe scores must be captured against the final deployed URL, not the local preview.
+
+## Future improvements
+
+- Add full component-level React Testing Library coverage.
+- Add a hosted history of attempts and learning milestones.
+- Add a provider status panel and retry backoff for quota pressure.
+- Add a deployment CI job that archives accessibility and Lighthouse reports.
+
+## Project links
+
+- Live URL: configure and record the Vercel production URL after deployment.
+- GitHub: https://github.com/HarshaRNaik/CodeCoach-AI
+
+Local production audit: Lighthouse Performance 85, Accessibility 95, Best Practices 100, SEO 82. Public production audit for `https://codecoach-54pzr10m3-harsharnaiks-projects.vercel.app/`: Performance 89, Accessibility 95, Best Practices 100, SEO 50. The SEO score is lowered by the currently deployed build's missing meta description/crawlability metadata; those fixes are now in source and require redeployment.
+
+See [docs/DEPLOYMENT_CHECKLIST.md](docs/DEPLOYMENT_CHECKLIST.md) for deployment, rollback, monitoring, secrets, accessibility, and performance checks. See [docs/REFLECTION.md](docs/REFLECTION.md) for the project reflection.
+
 ## Verification
 
 - `npm test` runs mocked endpoint tests; it never calls Gemini.
