@@ -18,7 +18,8 @@ import {
   Zap,
 } from "lucide-react";
 import "./App.css";
-import { requestExplanation, requestHint, type ExplanationResponse, type ProgrammingLanguage } from "./lib/api";
+import { requestExplanation, requestHint, requestRun, type ExplanationResponse, type ProgrammingLanguage } from "./lib/api";
+import { type TestResult } from "../shared/evaluator";
 
 type Challenge = {
   id: string;
@@ -53,8 +54,6 @@ const languageStarters: Record<ProgrammingLanguage, Record<string, string>> = {
   },
 };
 
-type TestResult = { label: string; passed: boolean; expected: string; received: string };
-
 const challenges: Challenge[] = [
   { id: "hello-world", title: "Hello World", difficulty: "Easy", description: "Write a program that prints the exact message Hello, World! to the console.", example: 'Output: "Hello, World!"', starter: `// Print the message below\nconsole.log("Hello, World!");`, concept: "console output" },
   { id: "variables", title: "Variables", difficulty: "Easy", description: "Create variables for a person's name and age, then display them in a readable sentence.", example: 'name = "Ada", age = 28 → "Ada is 28 years old."', starter: `const name = "Ada";\nconst age = 28;\n\n// Display a sentence using both variables`, concept: "variables and strings" },
@@ -65,22 +64,6 @@ const challenges: Challenge[] = [
   { id: "factorial", title: "Factorial", difficulty: "Easy", description: "Calculate the factorial of a non-negative integer by multiplying all integers from 1 through that number.", example: "5 → 120", starter: `function factorial(number) {\n  // Return the product of every integer from 1 to number\n}`, concept: "iteration" },
   { id: "count-vowels", title: "Count Vowels", difficulty: "Easy", description: "Count how many vowels appear in a string. Treat a, e, i, o, and u as vowels.", example: '"education" → 5', starter: `function countVowels(word) {\n  // Return how many vowels appear in word\n}`, concept: "character checks" },
 ];
-
-function evaluate(challenge: Challenge, code: string, language: ProgrammingLanguage): TestResult[] {
-  const normalized = code.toLowerCase();
-  const outputCall = language === "Python" ? normalized.includes("print") : language === "Java" ? normalized.includes("system.out") : language === "C++" ? normalized.includes("cout") : language === "Go" ? normalized.includes("fmt.") : normalized.includes("console.log");
-  const checks: Record<string, boolean[]> = {
-    "hello-world": [outputCall && code.includes("Hello, World!")],
-    variables: [normalized.includes("name") && normalized.includes("age"), outputCall || normalized.includes("return")],
-    "two-sum": [normalized.includes("target") && (normalized.includes("return") || normalized.includes("returning")), normalized.includes("map") || normalized.includes("hash") || normalized.includes("unordered_map")],
-    palindrome: [normalized.includes("return") && (normalized.includes("palindrome") || normalized.includes("word") || normalized.includes("string")), normalized.includes("reverse") || normalized.includes("reversed") || normalized.includes("split") || normalized.includes("[i]")],
-    fizzbuzz: [normalized.includes("%") && normalized.includes("number"), normalized.includes("15") && (normalized.includes("100") || normalized.includes("101") )],
-    "reverse-string": [normalized.includes("return") && (normalized.includes("reverse") || normalized.includes("reversed")), normalized.includes("split") || normalized.includes("[::-1]") || normalized.includes("reverse")],
-    factorial: [normalized.includes("factorial") && (normalized.includes("return") || normalized.includes("def ")), normalized.includes("for") || normalized.includes("while") || normalized.includes("range")],
-    "count-vowels": [normalized.includes("vowel") || normalized.includes("aeiou"), normalized.includes("count") || normalized.includes("includes") || normalized.includes("in ")],
-  };
-  return (checks[challenge.id] ?? []).map((passed, index) => ({ label: `Test ${index + 1}`, passed, expected: challenge.id === "two-sum" ? "[0, 1]" : "Expected behavior", received: passed ? "Matches expected behavior" : "No matching result yet" }));
-}
 
 function App() {
   const [selectedId, setSelectedId] = useState("two-sum");
@@ -114,10 +97,16 @@ function App() {
   const updateCode = (value: string) => setCodeByChallenge((current) => ({ ...current, [codeKey]: value }));
   const changeLanguage = (nextLanguage: ProgrammingLanguage) => { setLanguage(nextLanguage); setHint(""); setExplanation(null); setResults(null); setMessage(""); };
   const goTo = (section: "practice" | "progress" | "settings") => { setActiveSection(section); setProfileOpen(false); document.getElementById("practice")?.scrollIntoView({ behavior: "smooth" }); };
-  const runCode = () => {
+  const runCode = async () => {
     if (!code.trim()) { setMessage("Write some code before running tests."); setResults(null); return; }
     setLoading("run"); setMessage(""); setHint(""); setExplanation(null);
-    window.setTimeout(() => { const nextResults = evaluate(challenge, code, language); setResults(nextResults); setLoading(null); if (nextResults.every((item) => item.passed)) setCompleted((current) => current.includes(selectedId) ? current : [...current, selectedId]); }, 350);
+    try {
+      const nextResults = await requestRun(selectedId, code, language);
+      setResults(nextResults);
+      if (nextResults.every((item) => item.passed)) setCompleted((current) => current.includes(selectedId) ? current : [...current, selectedId]);
+    } catch {
+      setMessage("Your code is still here. Check the API connection and try running the tests again.");
+    } finally { setLoading(null); }
   };
   const getHint = async () => {
     if (!code.trim()) { setMessage("Write some code before requesting a hint."); return; }

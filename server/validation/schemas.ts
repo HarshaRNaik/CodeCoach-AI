@@ -15,6 +15,12 @@ export const explainRequestSchema = z.object({
   language: languageSchema,
 });
 
+export const runRequestSchema = z.object({
+  challengeId: z.string().trim().min(1),
+  code: z.string().trim().min(1, "Code must not be empty.").max(12000, "Code is too long."),
+  language: languageSchema,
+});
+
 export const hintResponseSchema = z.object({
   hint: z.string().trim().min(1).max(1000),
   level: z.number().int().min(1).max(3),

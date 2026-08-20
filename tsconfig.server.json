@@ -13,5 +13,5 @@
     "noUnusedParameters": true,
     "allowImportingTsExtensions": true
   },
-  "include": ["server/**/*.ts"]
+  "include": ["server/**/*.ts", "api/**/*.ts", "shared/**/*.ts"]
 }

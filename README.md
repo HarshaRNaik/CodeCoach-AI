@@ -17,6 +17,7 @@ The Vite development server proxies `/api/*` to Express on port `3001`. Set `POR
 - `GET /api/health` returns `{ "status": "ok" }` without contacting Gemini.
 - `POST /api/hint` accepts `{ challengeId, code, hintLevel, language }` and returns `{ hint, level }`.
 - `POST /api/explain` accepts `{ challengeId, code, language }` and returns `{ summary, steps, issues, learningTakeaway }`.
+- `POST /api/run` accepts `{ challengeId, code, language }` and returns deterministic `{ results }` without contacting Gemini.
 
 The API validates request bodies and Gemini JSON responses with Zod. The Gemini key is read only by the Express process; `.env` and `.env.local` are ignored by Git. Requests are capped at 20 KB and Gemini calls time out after 30 seconds. The client receives normalized errors without stack traces or provider details.
 
@@ -36,7 +37,9 @@ To verify a live tutor request, configure a valid `GEMINI_API_KEY`, start both p
 
 ## Deployment notes
 
-Deploy the frontend and Express API together or configure the frontend proxy/API origin for separate services. Set `GEMINI_API_KEY`, `GEMINI_MODEL` (optional), and `PORT` in the deployment environment. Never commit `.env` files. Keep the deterministic evaluator unchanged unless its challenge tests are updated alongside it.
+Vercel discovers the serverless functions in `api/`. Each function imports the shared Express app from `server/app.ts`, so local `npm run server` and production `/api/*` use the same routes and validation. In Vercel Project Settings, add `GEMINI_API_KEY` and optionally `GEMINI_MODEL` for Production, Preview, and Development. Never commit `.env` files. Keep the deterministic evaluator unchanged unless its challenge tests are updated alongside it.
+
+After deploying, verify `https://YOUR-DOMAIN.vercel.app/api/health` returns `{ "status": "ok" }`, then test Hint, Explain Code, and Run tests from the deployed UI. Redeploy with `vercel --prod` or by pushing to the connected Git branch.
 # React + TypeScript + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
