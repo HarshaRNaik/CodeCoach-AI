@@ -49,6 +49,7 @@ export function createApp(aiService: AiService = defaultAiService) {
     void next;
     if (error instanceof SyntaxError) { response.status(400).json({ error: "Request body must be valid JSON." }); return; }
     if (error instanceof AiProviderError && error.kind === "rate-limit") { response.status(429).json({ error: "AI service is temporarily busy. Please try again." }); return; }
+    if (error instanceof AiProviderError && error.kind === "timeout") { response.status(504).json({ error: "The tutor request timed out. Please try again." }); return; }
     if (error instanceof Error && error.name === "AbortError") { response.status(504).json({ error: "The tutor request timed out. Please try again." }); return; }
     if (error instanceof Error && error.message.includes("GEMINI_API_KEY")) { response.status(500).json({ error: "AI tutoring is not configured." }); return; }
     response.status(500).json({ error: "The AI service could not process this request." });
