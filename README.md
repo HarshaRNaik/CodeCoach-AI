@@ -1,157 +1,448 @@
 # CodeCoach AI
 
-CodeCoach AI is a small coding-practice workspace with eight challenges, a controlled deterministic evaluator, and a server-side Gemini tutor for progressive hints and code explanations. Learners can write in JavaScript, TypeScript, Python, Java, C++, or Go.
+CodeCoach AI is a small coding-practice workspace designed to help learners improve their programming skills through guided practice rather than simply receiving solutions. It provides eight beginner-friendly coding challenges, six programming languages, a deterministic evaluator for supported challenges, and a server-side Gemini tutor that provides progressive hints and structured code explanations. The project focuses on meaningful AI assistance, safe API boundaries, accessible UI, testing, resilience, and production deployment.
 
 ## Features
 
-- Eight beginner-friendly coding challenges.
-- Six selectable programming languages with language-specific starter code.
-- In-browser editor with local persistence.
-- Deterministic challenge evaluation through `/api/run`.
-- Progressive Gemini hints and structured code explanations.
-- Progress tracking, profile reset, responsive layout, loading states, and safe API errors.
+* Eight beginner-friendly coding challenges.
+* Six supported languages: JavaScript, TypeScript, Python, Java, C++, and Go.
+* Language-specific starter code.
+* In-browser code editor with local persistence.
+* Deterministic challenge evaluation through `/api/run`.
+* Progressive Gemini-powered hints.
+* Structured Gemini-powered code explanations.
+* Progress tracking and profile reset.
+* Responsive interface for desktop and mobile.
+* Loading states and safe API error handling.
+* Server-side API key handling.
 
-## Tech stack
+## Tech Stack
 
-React, TypeScript, Vite, Express, Zod, the official `@google/genai` SDK, Vitest, Supertest, and Vercel serverless functions.
+* **Frontend:** React, TypeScript, Vite
+* **Backend:** Express, TypeScript
+* **Validation:** Zod
+* **AI:** Google Gemini via the official `@google/genai` SDK
+* **Testing:** Vitest, Supertest
+* **Deployment:** Vercel
+* **Storage:** Browser `localStorage`
 
-## Run locally
+## Getting Started
 
-1. Install dependencies: `npm install`
-2. Copy `.env.example` to `.env` and set `GEMINI_API_KEY`.
-3. Start the API in one terminal: `npm run server`
-4. Start Vite in another terminal: `npm run dev`
-5. Open `http://localhost:5173`.
+### Prerequisites
 
-The Vite development server proxies `/api/*` to Express on port `3001`. Set `PORT` to change the backend port and update the proxy in `vite.config.ts` if needed.
+* Node.js 20+
+* npm
+* A Gemini API key for AI tutor features
 
-## API
+### Installation
 
-- `GET /api/health` returns `{ "status": "ok" }` without contacting Gemini.
-- `POST /api/hint` accepts `{ challengeId, code, hintLevel, language }` and returns `{ hint, level }`.
-- `POST /api/explain` accepts `{ challengeId, code, language }` and returns `{ summary, steps, issues, learningTakeaway }`.
-- `POST /api/run` accepts `{ challengeId, code, language }` and returns deterministic `{ results }` without contacting Gemini.
+Clone the repository and install dependencies:
 
-The API validates request bodies and Gemini JSON responses with Zod. The Gemini key is read only by the Express process; `.env` and `.env.local` are ignored by Git. Requests are capped at 20 KB and Gemini calls time out after 30 seconds. The client receives normalized errors without stack traces or provider details.
+```bash
+git clone https://github.com/HarshaRNaik/CodeCoach-AI.git
+cd CodeCoach-AI
+npm install
+```
+
+Create an environment file:
+
+```bash
+cp .env.example .env
+```
+
+Add your Gemini API key:
+
+```env
+GEMINI_API_KEY=your_api_key_here
+```
+
+### Run locally
+
+Start the Express API:
+
+```bash
+npm run server
+```
+
+In a second terminal, start the Vite development server:
+
+```bash
+npm run dev
+```
+
+Open:
+
+```text
+http://localhost:5173
+```
+
+The Vite development server proxies `/api/*` requests to Express on port `3001`.
+
+If the backend port is changed using `PORT`, update the corresponding proxy configuration in `vite.config.ts`.
 
 ## Architecture
 
-The browser uses `src/lib/api.ts` for tutor requests. Express validates the request, resolves challenge metadata, and delegates Gemini work to `server/services/aiService.ts`. Gemini is instructed to respond with a schema-constrained JSON object, which is parsed and validated before it reaches the browser. Code execution remains separate in the frontend's controlled evaluator and is never sent to Gemini for execution.
+CodeCoach AI separates the browser experience, API layer, AI service, validation, and deterministic evaluation.
 
-Code is saved separately for each challenge and language in localStorage.
-
-### AI prompt design
-
-The Gemini service receives the challenge description, selected language, and current learner code. Hint prompts explicitly select a conceptual, strategic, or implementation-oriented level and prohibit immediately replacing the learner's work. Explanation prompts request a summary, ordered steps, genuine issues, and a learning takeaway. Gemini is configured for JSON output and every response is validated with Zod before it reaches the browser.
-
-## Known limitations
-
-- The evaluator is a controlled pattern-based evaluator for the supported challenge set; it does not execute arbitrary code.
-- Gemini quota and provider availability can produce HTTP 429 or other safe API errors.
-- Lighthouse and axe scores must be captured against the final deployed URL, not the local preview.
-
-## Future improvements
-
-- Add full component-level React Testing Library coverage.
-- Add a hosted history of attempts and learning milestones.
-- Add a provider status panel and retry backoff for quota pressure.
-- Add a deployment CI job that archives accessibility and Lighthouse reports.
-
-## Project links
-
-- Live URL: configure and record the Vercel production URL after deployment.
-- GitHub: https://github.com/HarshaRNaik/CodeCoach-AI
-
-Local production audit: Lighthouse Performance 85, Accessibility 95, Best Practices 100, SEO 82. Public production audit for `https://codecoach-54pzr10m3-harsharnaiks-projects.vercel.app/`: Performance 89, Accessibility 95, Best Practices 100, SEO 50. The SEO score is lowered by the currently deployed build's missing meta description/crawlability metadata; those fixes are now in source and require redeployment.
-
-See [docs/DEPLOYMENT_CHECKLIST.md](docs/DEPLOYMENT_CHECKLIST.md) for deployment, rollback, monitoring, secrets, accessibility, and performance checks. See [docs/REFLECTION.md](docs/REFLECTION.md) for the project reflection.
-
-## Verification
-
-- `npm test` runs mocked endpoint tests; it never calls Gemini.
-- `npm run build:server` type-checks the backend.
-- `npm run build` creates the frontend production bundle.
-- `npm run lint` checks the workspace.
-
-To verify a live tutor request, configure a valid `GEMINI_API_KEY`, start both processes, and use **Get hint** or **Explain code** in the UI. Without the key, health and validation still work, while tutor requests return a safe configuration error.
-
-## Deployment notes
-
-Vercel discovers the serverless functions in `api/`. Each function imports the shared Express app from `server/app.ts`, so local `npm run server` and production `/api/*` use the same routes and validation. In Vercel Project Settings, add `GEMINI_API_KEY` and optionally `GEMINI_MODEL` for Production, Preview, and Development. Never commit `.env` files. Keep the deterministic evaluator unchanged unless its challenge tests are updated alongside it.
-
-After deploying, verify `https://YOUR-DOMAIN.vercel.app/api/health` returns `{ "status": "ok" }`, then test Hint, Explain Code, and Run tests from the deployed UI. Redeploy with `vercel --prod` or by pushing to the connected Git branch.
-# React + TypeScript + Vite
-
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
-
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
-
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-
+```text
+Browser
+  │
+  ├── React UI
+  │     └── src/lib/api.ts
+  │
+  ▼
+Express API
+  │
+  ├── Request validation ── Zod
+  │
+  ├── /api/run
+  │     └── Deterministic evaluator
+  │
+  ├── /api/hint
+  │     └── AI service ── Gemini
+  │
+  └── /api/explain
+        └── AI service ── Gemini
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### Frontend
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+The React frontend provides the coding workspace, challenge selection, language selection, editor, progress tracking, and tutor interactions.
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+Code is stored separately for each challenge and language using browser `localStorage`.
 
+### API
+
+The Express application validates requests, resolves challenge metadata, handles errors, and delegates AI operations to the Gemini service.
+
+The same Express application is used locally and exposed through Vercel serverless functions in production.
+
+### Deterministic evaluator
+
+`/api/run` uses a controlled evaluator for the supported challenge set.
+
+It does **not** execute arbitrary user code and does not send code to Gemini for execution. This keeps completion decisions predictable and avoids treating an LLM as a code-execution environment.
+
+### Validation
+
+Request bodies and structured Gemini responses are validated with Zod before data reaches the browser.
+
+This provides a boundary between external model output and application state.
+
+## AI Integration
+
+Gemini is used as a coding tutor rather than as a generic chatbot.
+
+The AI receives:
+
+* The selected coding challenge.
+* The selected programming language.
+* The learner's current code.
+* The requested hint level when generating hints.
+
+### Progressive hints
+
+Hints are intentionally divided into progressive levels so that the learner receives guidance without immediately being given a complete solution.
+
+The prompt directs Gemini to provide conceptual, strategic, or implementation-oriented guidance depending on the selected level.
+
+The goal is to help the learner identify the next step themselves.
+
+### Code explanations
+
+The Explain Code feature asks Gemini to return structured information containing:
+
+* A summary of the code.
+* Ordered explanation steps.
+* Genuine issues identified in the code.
+* A learning takeaway.
+
+Gemini is configured for structured JSON output, and the returned data is validated with Zod before being returned to the frontend.
+
+### Why AI is used
+
+The AI component solves a specific learning problem: learners often know that their code is not working but do not know what to investigate next.
+
+Instead of replacing the learner's code with an answer, CodeCoach AI uses Gemini to provide progressively more detailed guidance and explanations.
+
+## API
+
+### `GET /api/health`
+
+Returns a health response without contacting Gemini.
+
+```json
+{
+  "status": "ok"
+}
 ```
+
+### `POST /api/hint`
+
+Accepts:
+
+```json
+{
+  "challengeId": "challenge-id",
+  "code": "learner code",
+  "hintLevel": 1,
+  "language": "javascript"
+}
+```
+
+Returns:
+
+```json
+{
+  "hint": "hint text",
+  "level": 1
+}
+```
+
+### `POST /api/explain`
+
+Accepts:
+
+```json
+{
+  "challengeId": "challenge-id",
+  "code": "learner code",
+  "language": "javascript"
+}
+```
+
+Returns structured explanation data:
+
+```json
+{
+  "summary": "summary",
+  "steps": [],
+  "issues": [],
+  "learningTakeaway": "takeaway"
+}
+```
+
+### `POST /api/run`
+
+Accepts:
+
+```json
+{
+  "challengeId": "challenge-id",
+  "code": "learner code",
+  "language": "javascript"
+}
+```
+
+Returns deterministic evaluation results.
+
+The evaluator does not contact Gemini.
+
+## Resilience and Error Handling
+
+The application treats AI responses and external provider failures as untrusted inputs.
+
+* Invalid request bodies return HTTP `400`.
+* Unknown challenges return HTTP `404`.
+* Gemini rate limits return HTTP `429`.
+* Tutor timeouts return HTTP `504`.
+* Malformed structured Gemini responses are rejected safely.
+* API keys are never returned to clients.
+* Prompts and stack traces are not exposed to users.
+* Requests are capped at 20 KB.
+* Gemini calls have a 30-second timeout.
+* The frontend receives normalized error messages rather than provider-specific internal details.
+* The health endpoint works without contacting Gemini.
+* The deterministic evaluator remains independent of Gemini.
+
+If the Gemini provider is unavailable, users can still access the application and deterministic challenge functionality while tutor requests fail with a safe error state.
+
+## Testing
+
+The project uses Vitest and Supertest for backend API testing.
+
+The final test run produced:
+
+```text
+Test Files: 1 passed
+Tests:      13 passed (13)
+```
+
+### Coverage
+
+```text
+Statements: 55.97%
+Branches:   55.35%
+Functions:  56%
+Lines:      54.2%
+```
+
+The final test suite covers:
+
+* Health endpoint behavior.
+* Successful hints.
+* Repeated hint requests.
+* Invalid hint requests.
+* Unknown challenges.
+* Structured code explanations.
+* Malformed explanation output.
+* Gemini failures.
+* Gemini rate limits.
+* Tutor timeouts.
+* Deterministic evaluation.
+* Invalid run requests.
+
+Gemini calls are mocked during automated tests, so the test suite does not depend on provider availability or consume Gemini quota.
+
+Run the test suite with:
+
+```bash
+npm test
+```
+
+Run tests with coverage:
+
+```bash
+npm run test -- --coverage
+```
+
+## Verification Commands
+
+### Backend type checking
+
+```bash
+npm run build:server
+```
+
+### Frontend production build
+
+```bash
+npm run build
+```
+
+### Linting
+
+```bash
+npm run lint
+```
+
+### Tests
+
+```bash
+npm test
+```
+
+For a live tutor request, configure a valid `GEMINI_API_KEY`, start both processes, and use **Get Hint** or **Explain Code** from the UI.
+
+## Performance and Accessibility
+
+The final deployed application was audited with Lighthouse.
+
+| Audit          |   Score |
+| -------------- | ------: |
+| Performance    |  **96** |
+| Accessibility  | **100** |
+| Best Practices | **100** |
+| SEO            | **100** |
+
+Accessibility improvements made during development included:
+
+* Semantic page structure.
+* Accessible labels for editor and language controls.
+* Visible button labels and ARIA labels where appropriate.
+* Live regions for dynamic status information.
+* Keyboard-focusable controls.
+* Responsive behavior at desktop and 375px mobile widths.
+* Removal of horizontal overflow issues.
+
+The final production application was smoke-tested after deployment, including the core Run, Hint, Explain, and invalid-input flows.
+
+## Deployment
+
+The production application is deployed on Vercel.
+
+Vercel discovers the serverless API functions in `api/`. Each function uses the shared Express application from `server/app.ts`, allowing local development and production requests to use the same routes and validation logic.
+
+Production environment variables are configured through Vercel rather than committed to the repository.
+
+After deployment, the following production checks are performed:
+
+```text
+GET /api/health
+Run Code
+Get Hint
+Explain Code
+Invalid input handling
+```
+
+A deployment checklist containing build, testing, accessibility, performance, error-handling, secrets, monitoring, and rollback checks is available at:
+
+`docs/DEPLOYMENT_CHECKLIST.md`
+
+## Rollback Plan
+
+If a production regression occurs:
+
+1. Identify the last known-good Vercel deployment.
+2. Promote the known-good deployment to production.
+3. Revert the source commit if necessary after confirming the rollback is stable.
+4. Recheck `/api/health`.
+5. Recheck Run Code, Get Hint, Explain Code, and error handling.
+
+Vercel deployment history provides the deployment-level rollback point, while Git provides the source-level rollback history.
+
+## Known Limitations
+
+* The evaluator is a controlled pattern-based evaluator for the supported challenge set and does not execute arbitrary code.
+* Gemini availability and quota can affect tutor features.
+* The application currently stores progress locally in the browser.
+* There is no persistent account-based learning history.
+* AI-generated guidance still requires validation because structured model output is not guaranteed to be correct.
+* The current test suite focuses heavily on the API and deterministic evaluator rather than full React component-level testing.
+
+## Future Improvements
+
+* Add full React Testing Library component coverage.
+* Add persistent learning history and attempt tracking.
+* Add learning milestones and progress analytics.
+* Add a provider health/status panel.
+* Add retry backoff for temporary provider failures.
+* Add CI automation that archives Lighthouse and accessibility reports.
+* Expand the challenge and evaluator library.
+* Add authenticated cloud synchronization.
+
+## Project Links
+
+**Live application:**
+https://codecoach-ai-fawn.vercel.app/
+
+**GitHub repository:**
+https://github.com/HarshaRNaik/CodeCoach-AI
+
+**Deployment checklist:**
+`docs/DEPLOYMENT_CHECKLIST.md`
+
+**Reflection:**
+`docs/REFLECTION.md`
+
+## Production Status
+
+CodeCoach AI is deployed and functional.
+
+The final production verification confirmed:
+
+* **13/13 automated tests passing.**
+* **55.97% statement coverage.**
+* **55.35% branch coverage.**
+* **56% function coverage.**
+* **54.2% line coverage.**
+* **Lighthouse Performance: 96.**
+* **Lighthouse Accessibility: 100.**
+* **Lighthouse Best Practices: 100.**
+* **Lighthouse SEO: 100.**
+* Production health endpoint working.
+* Run Code working.
+* Get Hint working.
+* Explain Code working.
+* Invalid input handled safely.
+* Deployment and rollback procedures documented.
