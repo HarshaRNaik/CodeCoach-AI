@@ -922,3 +922,534 @@ h2 {
     line-height: 1.5;
   }
 }
+/* ================================
+   DARK THEME
+================================ */
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+
+  --bg: #11100e;
+  --surface: #191816;
+  --surface-raised: #211f1c;
+  --border: #35312b;
+  --text: #f5f1e8;
+  --muted: #a8a096;
+  --accent: #e7a85b;
+  --accent-soft: rgba(231, 168, 91, 0.12);
+}
+
+:root[data-theme="dark"] body {
+  background: var(--bg);
+  color: var(--text);
+}
+
+:root[data-theme="dark"] .app-shell {
+  background: var(--bg);
+  color: var(--text);
+}
+
+:root[data-theme="dark"] .topbar {
+  background: rgba(25, 24, 22, 0.94);
+  border-color: var(--border);
+}
+
+:root[data-theme="dark"] .sidebar {
+  background: #151412;
+  border-color: var(--border);
+}
+
+:root[data-theme="dark"] .main-content {
+  background: var(--bg);
+}
+
+:root[data-theme="dark"] .challenge-item {
+  color: var(--text);
+}
+
+:root[data-theme="dark"] .challenge-item:hover {
+  background: var(--surface-raised);
+}
+
+:root[data-theme="dark"] .challenge-item.current {
+  background: var(--accent-soft);
+}
+
+:root[data-theme="dark"] .description,
+:root[data-theme="dark"] .challenge-copy small,
+:root[data-theme="dark"] .sidebar-note p {
+  color: var(--muted);
+}
+
+:root[data-theme="dark"] .example-strip,
+:root[data-theme="dark"] .editor-panel,
+:root[data-theme="dark"] .feedback-panel,
+:root[data-theme="dark"] .section-panel {
+  background: var(--surface);
+  border-color: var(--border);
+}
+
+:root[data-theme="dark"] .example-strip {
+  color: var(--text);
+}
+
+:root[data-theme="dark"] .code-editor {
+  background: #0d0d0c;
+  color: #f4efe5;
+  border-color: var(--border);
+}
+
+:root[data-theme="dark"] .editor-footer,
+:root[data-theme="dark"] .panel-toolbar {
+  background: #151412;
+  border-color: var(--border);
+}
+
+:root[data-theme="dark"] .language-select,
+:root[data-theme="dark"] .settings-language-select {
+  background: var(--surface-raised);
+  color: var(--text);
+  border-color: var(--border);
+}
+
+:root[data-theme="dark"] .secondary-button,
+:root[data-theme="dark"] .reset-button {
+  background: var(--surface);
+  color: var(--text);
+  border-color: var(--border);
+}
+
+:root[data-theme="dark"] .secondary-button:hover,
+:root[data-theme="dark"] .reset-button:hover {
+  background: var(--surface-raised);
+}
+
+:root[data-theme="dark"] .section-panel h2,
+:root[data-theme="dark"] .feedback-panel h2,
+:root[data-theme="dark"] .content-intro h1 {
+  color: var(--text);
+}
+
+:root[data-theme="dark"] .empty-feedback {
+  color: var(--muted);
+}
+
+:root[data-theme="dark"] .profile-menu {
+  background: var(--surface);
+  border-color: var(--border);
+  color: var(--text);
+}
+
+:root[data-theme="dark"] .profile-menu span {
+  color: var(--muted);
+}
+
+:root[data-theme="dark"] .profile-menu button {
+  color: var(--text);
+}
+
+:root[data-theme="dark"] .setting-card {
+  background: var(--surface-raised);
+  border-color: var(--border);
+}
+
+:root[data-theme="dark"] .setting-info span {
+  color: var(--muted);
+}
+
+
+/* ================================
+   SETTINGS UI
+================================ */
+
+.settings-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.settings-intro {
+  max-width: 620px;
+}
+
+.settings-options {
+  display: grid;
+  gap: 14px;
+  max-width: 760px;
+}
+
+.setting-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 20px;
+  border: 1px solid #e5e0d8;
+  border-radius: 16px;
+  background: #fffdf9;
+}
+
+.setting-info {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.setting-info strong {
+  display: block;
+  margin-bottom: 4px;
+}
+
+.setting-info span {
+  display: block;
+  color: #77716a;
+  font-size: 13px;
+}
+
+.setting-icon {
+  width: 40px;
+  height: 40px;
+  display: grid;
+  place-items: center;
+  border-radius: 11px;
+  background: var(--accent-soft, rgba(231, 168, 91, 0.12));
+  color: var(--accent, #c77d28);
+}
+
+.theme-switcher {
+  display: flex;
+  padding: 4px;
+  gap: 3px;
+  border-radius: 10px;
+  background: #eeebe5;
+}
+
+.theme-switcher button {
+  border: 0;
+  border-radius: 7px;
+  padding: 8px 15px;
+  background: transparent;
+  color: #716b64;
+  cursor: pointer;
+  font: inherit;
+  font-size: 13px;
+}
+
+.theme-switcher button.selected {
+  background: white;
+  color: #24211e;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+}
+
+:root[data-theme="dark"] .theme-switcher {
+  background: #11100e;
+}
+
+:root[data-theme="dark"] .theme-switcher button {
+  color: #999188;
+}
+
+:root[data-theme="dark"] .theme-switcher button.selected {
+  background: #35312b;
+  color: #fff;
+}
+
+.settings-language-select {
+  min-width: 150px;
+  padding: 9px 12px;
+  border: 1px solid #ddd7cf;
+  border-radius: 9px;
+  background: white;
+  color: #24211e;
+  font: inherit;
+  cursor: pointer;
+}
+/* =========================================================
+   CODECOACH THEME SYSTEM
+   ========================================================= */
+
+.app-shell {
+  --bg: #f7f8fa;
+  --surface: #ffffff;
+  --surface-soft: #f4f5f7;
+  --surface-hover: #eef0f3;
+  --border: #e2e5e9;
+  --text: #17191d;
+  --text-secondary: #626873;
+  --text-muted: #8a9099;
+  --accent: #ff6b35;
+  --accent-soft: #fff0ea;
+  --code-bg: #17191f;
+  --code-text: #e8ebef;
+  --shadow: 0 8px 30px rgba(20, 24, 32, 0.07);
+
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+
+  transition:
+    background-color 0.25s ease,
+    color 0.25s ease;
+}
+
+/* Dark theme */
+
+.app-shell.theme-dark {
+  --bg: #0f1115;
+  --surface: #171a20;
+  --surface-soft: #1d2128;
+  --surface-hover: #252a32;
+  --border: #2b313b;
+  --text: #f1f3f5;
+  --text-secondary: #b3b9c3;
+  --text-muted: #7f8793;
+  --accent: #ff7847;
+  --accent-soft: #321d16;
+  --code-bg: #0b0d10;
+  --code-text: #e8ebef;
+  --shadow: 0 10px 35px rgba(0, 0, 0, 0.28);
+}
+
+/* Apply variables to major UI areas */
+
+.app-shell .topbar,
+.app-shell .sidebar,
+.app-shell .feedback-panel,
+.app-shell .editor-panel,
+.app-shell .example-strip,
+.app-shell .settings-card,
+.app-shell .section-panel {
+  background: var(--surface);
+  border-color: var(--border);
+  color: var(--text);
+}
+
+.app-shell .sidebar,
+.app-shell .main-content {
+  color: var(--text);
+}
+
+.app-shell h1,
+.app-shell h2,
+.app-shell h3,
+.app-shell strong {
+  color: var(--text);
+}
+
+.app-shell p,
+.app-shell small,
+.app-shell .description {
+  color: var(--text-secondary);
+}
+
+.app-shell .challenge-item:hover {
+  background: var(--surface-hover);
+}
+
+.app-shell .challenge-item.current {
+  background: var(--accent-soft);
+}
+
+.app-shell .challenge-item,
+.app-shell .topnav button,
+.app-shell .secondary-button,
+.app-shell .reset-button {
+  color: var(--text-secondary);
+}
+
+.app-shell .topnav button.active {
+  color: var(--accent);
+}
+
+.app-shell .language-select,
+.app-shell select {
+  background: var(--surface);
+  color: var(--text);
+  border-color: var(--border);
+}
+
+.app-shell .editor-footer {
+  background: var(--surface-soft);
+  color: var(--text-secondary);
+  border-color: var(--border);
+}
+
+.app-shell .code-editor {
+  background: var(--code-bg);
+  color: var(--code-text);
+}
+
+.app-shell .feedback-panel,
+.app-shell .editor-panel,
+.app-shell .settings-card {
+  box-shadow: var(--shadow);
+}
+
+/* Settings page */
+
+.settings-page {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 24px 0 60px;
+}
+
+.settings-header {
+  margin-bottom: 28px;
+}
+
+.settings-header h1 {
+  margin: 4px 0 8px;
+  font-size: 32px;
+}
+
+.settings-header p:last-child {
+  margin: 0;
+  color: var(--text-secondary);
+}
+
+.settings-card {
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 24px;
+  margin-bottom: 18px;
+  box-shadow: var(--shadow);
+}
+
+.settings-card-header {
+  margin-bottom: 20px;
+}
+
+.settings-card-header h2 {
+  margin: 0 0 6px;
+  font-size: 19px;
+}
+
+.settings-card-header p {
+  margin: 0;
+  color: var(--text-secondary);
+}
+
+.settings-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding-top: 18px;
+  border-top: 1px solid var(--border);
+}
+
+.settings-row > div {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.settings-row span {
+  color: var(--text-secondary);
+  font-size: 14px;
+}
+
+.settings-row select {
+  min-width: 170px;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  outline: none;
+}
+
+/* Theme cards */
+
+.theme-options {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.theme-option {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--surface-soft);
+  color: var(--text);
+  text-align: left;
+  cursor: pointer;
+  transition:
+    border-color 0.2s ease,
+    background-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.theme-option:hover {
+  background: var(--surface-hover);
+  transform: translateY(-1px);
+}
+
+.theme-option.selected {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+
+.theme-option > span:nth-child(2) {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.theme-option strong {
+  color: var(--text);
+}
+
+.theme-option small {
+  color: var(--text-secondary);
+}
+
+.theme-preview {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  flex: 0 0 42px;
+  border-radius: 12px;
+  font-size: 19px;
+}
+
+.light-preview {
+  background: #ffffff;
+  border: 1px solid #e2e5e9;
+}
+
+.dark-preview {
+  background: #101216;
+  border: 1px solid #303640;
+}
+
+.theme-check {
+  margin-left: auto;
+  color: var(--accent);
+  font-weight: 700;
+  font-size: 18px;
+}
+
+@media (max-width: 700px) {
+  .theme-options {
+    grid-template-columns: 1fr;
+  }
+
+  .settings-row {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .settings-row select {
+    width: 100%;
+  }
+
+  .settings-page {
+    padding: 16px 0 90px;
+  }
+}

@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import {
   AlertCircle,
+  BarChart3,
   BookOpen,
   Check,
   CheckCircle2,
@@ -18,7 +19,6 @@ import {
   User,
   X,
   Zap,
-  BarChart3,
 } from "lucide-react";
 import "./App.css";
 import {
@@ -44,6 +44,8 @@ type Challenge = {
 };
 
 type Section = "practice" | "progress" | "settings" | "profile";
+
+export type Theme = "light" | "dark";
 
 const languages: ProgrammingLanguage[] = [
   "JavaScript",
@@ -204,6 +206,7 @@ const age: number = 28;
 
   "C++": {
     "hello-world": `#include <iostream>
+
 int main() {
   // Print the message below
 }`,
@@ -213,6 +216,7 @@ int main() {
 int main() {
   std::string name = "Ada";
   int age = 28;
+
   // Display a sentence using both variables
 }`,
     "two-sum": `#include <vector>
@@ -411,11 +415,19 @@ function App() {
     );
   });
 
+  const [theme, setTheme] = useState<Theme>(() => {
+    const saved = localStorage.getItem("codecoach-theme");
+
+    return saved === "dark" ? "dark" : "light";
+  });
+
   const [codeByChallenge, setCodeByChallenge] = useState<
     Record<string, string>
   >(() => {
     try {
-      return JSON.parse(localStorage.getItem("codecoach-code") ?? "{}");
+      return JSON.parse(
+        localStorage.getItem("codecoach-code") ?? "{}"
+      );
     } catch {
       return {};
     }
@@ -442,12 +454,13 @@ function App() {
   >(null);
 
   const [mobileOpen, setMobileOpen] = useState(false);
-
   const [activeSection, setActiveSection] =
     useState<Section>("practice");
 
   const [profileAvatar, setProfileAvatar] = useState(
-    () => localStorage.getItem("codecoach-profile-avatar") ?? "👨‍💻"
+    () =>
+      localStorage.getItem("codecoach-profile-avatar") ??
+      "👨‍💻"
   );
 
   const challenge = useMemo(
@@ -485,9 +498,18 @@ function App() {
     localStorage.setItem("codecoach-language", language);
   }, [language]);
 
+  // Save and apply theme immediately.
+  useEffect(() => {
+    localStorage.setItem("codecoach-theme", theme);
+
+    document.documentElement.setAttribute(
+      "data-theme",
+      theme
+    );
+  }, [theme]);
+
   useEffect(() => {
     const updateProfile = () => {
-
       setProfileAvatar(
         localStorage.getItem("codecoach-profile-avatar") ??
           "👨‍💻"
@@ -531,9 +553,14 @@ function App() {
     setMessage("");
   };
 
+  const changeTheme = (nextTheme: Theme) => {
+    setTheme(nextTheme);
+  };
+
   const goTo = (section: Section) => {
     setActiveSection(section);
     setMobileOpen(false);
+
     window.scrollTo({
       top: 0,
       behavior: "smooth",
@@ -643,7 +670,7 @@ function App() {
   };
 
   return (
-    <div className="app-shell">
+    <div className={`app-shell theme-${theme}`}>
       <header className="topbar">
         <button
           className="brand"
@@ -753,12 +780,8 @@ function App() {
 
           <div className="challenge-list">
             {challenges.map((item, index) => {
-              const isComplete = completed.includes(
-                item.id
-              );
-
-              const isCurrent =
-                selectedId === item.id;
+              const isComplete = completed.includes(item.id);
+              const isCurrent = selectedId === item.id;
 
               return (
                 <button
@@ -833,12 +856,12 @@ function App() {
                   value as ProgrammingLanguage
                 )
               }
+              theme={theme}
+              onThemeChange={changeTheme}
             />
           )}
 
-          {activeSection === "profile" && (
-            <Profile />
-          )}
+          {activeSection === "profile" && <Profile />}
 
           {activeSection === "practice" && (
             <>
@@ -895,8 +918,7 @@ function App() {
                       ? "cpp"
                       : language === "Go"
                       ? "go"
-                      : language ===
-                        "TypeScript"
+                      : language === "TypeScript"
                       ? "ts"
                       : "js"}
                   </div>
@@ -1016,10 +1038,9 @@ function App() {
                   className="reset-button"
                   onClick={() =>
                     updateCode(
-                      languageStarters[
-                        language
-                      ][selectedId] ??
-                        challenge.starter
+                      languageStarters[language][
+                        selectedId
+                      ] ?? challenge.starter
                     )
                   }
                   aria-label="Reset code"
