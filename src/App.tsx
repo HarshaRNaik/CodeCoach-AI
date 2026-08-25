@@ -454,6 +454,25 @@ function App() {
   >(null);
 
   const [mobileOpen, setMobileOpen] = useState(false);
+
+  const [sidebarWidth, setSidebarWidth] = useState(() => {
+    const saved = localStorage.getItem(
+      "codecoach-sidebar-width"
+    );
+
+    const parsed = saved ? Number(saved) : 265;
+
+    return Number.isFinite(parsed)
+      ? Math.min(420, Math.max(200, parsed))
+      : 265;
+  });
+
+  const [sidebarCollapsed, setSidebarCollapsed] =
+    useState(false);
+
+  const [isResizingSidebar, setIsResizingSidebar] =
+    useState(false);
+
   const [activeSection, setActiveSection] =
     useState<Section>("practice");
 
@@ -495,7 +514,10 @@ function App() {
   }, [completed]);
 
   useEffect(() => {
-    localStorage.setItem("codecoach-language", language);
+    localStorage.setItem(
+      "codecoach-language",
+      language
+    );
   }, [language]);
 
   // Save and apply theme immediately.
@@ -508,20 +530,76 @@ function App() {
     );
   }, [theme]);
 
+  // Save sidebar width.
+  useEffect(() => {
+    localStorage.setItem(
+      "codecoach-sidebar-width",
+      String(sidebarWidth)
+    );
+  }, [sidebarWidth]);
+
+  // Handle sidebar resizing.
+  useEffect(() => {
+    if (!isResizingSidebar) return;
+
+    const handleMouseMove = (event: MouseEvent) => {
+      const nextWidth = Math.min(
+        420,
+        Math.max(200, event.clientX)
+      );
+
+      setSidebarWidth(nextWidth);
+    };
+
+    const handleMouseUp = () => {
+      setIsResizingSidebar(false);
+    };
+
+    document.addEventListener(
+      "mousemove",
+      handleMouseMove
+    );
+
+    document.addEventListener(
+      "mouseup",
+      handleMouseUp
+    );
+
+    return () => {
+      document.removeEventListener(
+        "mousemove",
+        handleMouseMove
+      );
+
+      document.removeEventListener(
+        "mouseup",
+        handleMouseUp
+      );
+    };
+  }, [isResizingSidebar]);
+
+  // Keep profile avatar synchronized.
   useEffect(() => {
     const updateProfile = () => {
       setProfileAvatar(
-        localStorage.getItem("codecoach-profile-avatar") ??
-          "👨‍💻"
+        localStorage.getItem(
+          "codecoach-profile-avatar"
+        ) ?? "👨‍💻"
       );
     };
 
     updateProfile();
 
-    window.addEventListener("storage", updateProfile);
+    window.addEventListener(
+      "storage",
+      updateProfile
+    );
 
     return () => {
-      window.removeEventListener("storage", updateProfile);
+      window.removeEventListener(
+        "storage",
+        updateProfile
+      );
     };
   }, [activeSection]);
 
@@ -569,7 +647,9 @@ function App() {
 
   const runCode = async () => {
     if (!code.trim()) {
-      setMessage("Write some code before running tests.");
+      setMessage(
+        "Write some code before running tests."
+      );
       setResults(null);
       return;
     }
@@ -588,7 +668,11 @@ function App() {
 
       setResults(nextResults);
 
-      if (nextResults.every((item) => item.passed)) {
+      if (
+        nextResults.every(
+          (item) => item.passed
+        )
+      ) {
         setCompleted((current) =>
           current.includes(selectedId)
             ? current
@@ -606,7 +690,9 @@ function App() {
 
   const getHint = async () => {
     if (!code.trim()) {
-      setMessage("Write some code before requesting a hint.");
+      setMessage(
+        "Write some code before requesting a hint."
+      );
       return;
     }
 
@@ -683,7 +769,9 @@ function App() {
 
           <span>
             codecoach
-            <span className="brand-accent">.ai</span>
+            <span className="brand-accent">
+              .ai
+            </span>
           </span>
         </button>
 
@@ -693,7 +781,9 @@ function App() {
         >
           <button
             className={
-              activeSection === "practice" ? "active" : ""
+              activeSection === "practice"
+                ? "active"
+                : ""
             }
             onClick={() => goTo("practice")}
           >
@@ -702,7 +792,9 @@ function App() {
 
           <button
             className={
-              activeSection === "progress" ? "active" : ""
+              activeSection === "progress"
+                ? "active"
+                : ""
             }
             onClick={() => goTo("progress")}
           >
@@ -711,7 +803,9 @@ function App() {
 
           <button
             className={
-              activeSection === "settings" ? "active" : ""
+              activeSection === "settings"
+                ? "active"
+                : ""
             }
             onClick={() => goTo("settings")}
           >
@@ -727,7 +821,9 @@ function App() {
           <div className="mini-track">
             <span
               style={{
-                width: `${(progress / totalChallenges) * 100}%`,
+                width: `${
+                  (progress / totalChallenges) * 100
+                }%`,
               }}
             />
           </div>
@@ -760,84 +856,159 @@ function App() {
         </button>
       </header>
 
-      <div className="workspace">
+      <div
+        className={`workspace ${
+          sidebarCollapsed
+            ? "sidebar-collapsed"
+            : ""
+        }`}
+        style={
+          sidebarCollapsed
+            ? undefined
+            : ({
+                "--sidebar-width": `${sidebarWidth}px`,
+              } as React.CSSProperties)
+        }
+      >
         <aside
           className={`sidebar ${
             mobileOpen ? "open" : ""
           }`}
           aria-label="Challenge navigation"
         >
-          <div className="sidebar-heading">
-            <div>
-              <p className="eyebrow">Your path</p>
-              <h2>Challenges</h2>
-            </div>
+          <button
+            className="sidebar-collapse"
+            onClick={() =>
+              setSidebarCollapsed(
+                (collapsed) => !collapsed
+              )
+            }
+            aria-label={
+              sidebarCollapsed
+                ? "Expand challenge sidebar"
+                : "Collapse challenge sidebar"
+            }
+          >
+            {sidebarCollapsed ? "→" : "←"}
+          </button>
 
-            <span className="challenge-count">
-              {progress}/{totalChallenges}
-            </span>
-          </div>
+          {!sidebarCollapsed && (
+            <div
+              className="sidebar-resizer"
+              onMouseDown={() =>
+                setIsResizingSidebar(true)
+              }
+              role="separator"
+              aria-label="Resize challenge sidebar"
+              aria-orientation="vertical"
+            />
+          )}
 
-          <div className="challenge-list">
-            {challenges.map((item, index) => {
-              const isComplete = completed.includes(item.id);
-              const isCurrent = selectedId === item.id;
+          {!sidebarCollapsed && (
+            <>
+              <div className="sidebar-heading">
+                <div>
+                  <p className="eyebrow">
+                    Your path
+                  </p>
 
-              return (
-                <button
-                  className={`challenge-item ${
-                    isCurrent ? "current" : ""
-                  }`}
-                  key={item.id}
-                  onClick={() =>
-                    selectChallenge(item.id)
+                  <h2>Challenges</h2>
+                </div>
+
+                <span className="challenge-count">
+                  {progress}/{totalChallenges}
+                </span>
+              </div>
+
+              <div className="challenge-list">
+                {challenges.map(
+                  (item, index) => {
+                    const isComplete =
+                      completed.includes(
+                        item.id
+                      );
+
+                    const isCurrent =
+                      selectedId === item.id;
+
+                    return (
+                      <button
+                        className={`challenge-item ${
+                          isCurrent
+                            ? "current"
+                            : ""
+                        }`}
+                        key={item.id}
+                        onClick={() =>
+                          selectChallenge(
+                            item.id
+                          )
+                        }
+                      >
+                        <span
+                          className={`status-icon ${
+                            isComplete
+                              ? "done"
+                              : ""
+                          }`}
+                        >
+                          {isComplete ? (
+                            <Check size={14} />
+                          ) : isCurrent ? (
+                            <ChevronRight
+                              size={15}
+                            />
+                          ) : (
+                            <Circle
+                              size={12}
+                            />
+                          )}
+                        </span>
+
+                        <span className="challenge-copy">
+                          <strong>
+                            {String(
+                              index + 1
+                            ).padStart(
+                              2,
+                              "0"
+                            )}{" "}
+                            · {item.title}
+                          </strong>
+
+                          <small>
+                            {item.difficulty}
+                          </small>
+                        </span>
+
+                        {isComplete && (
+                          <CheckCircle2
+                            className="completion"
+                            size={16}
+                          />
+                        )}
+                      </button>
+                    );
                   }
-                >
-                  <span
-                    className={`status-icon ${
-                      isComplete ? "done" : ""
-                    }`}
-                  >
-                    {isComplete ? (
-                      <Check size={14} />
-                    ) : isCurrent ? (
-                      <ChevronRight size={15} />
-                    ) : (
-                      <Circle size={12} />
-                    )}
-                  </span>
+                )}
+              </div>
 
-                  <span className="challenge-copy">
-                    <strong>
-                      {String(index + 1).padStart(2, "0")} ·{" "}
-                      {item.title}
-                    </strong>
+              <div className="sidebar-note">
+                <Sparkles size={17} />
 
-                    <small>{item.difficulty}</small>
-                  </span>
+                <div>
+                  <strong>
+                    Keep going
+                  </strong>
 
-                  {isComplete && (
-                    <CheckCircle2
-                      className="completion"
-                      size={16}
-                    />
-                  )}
-                </button>
-              );
-            })}
-          </div>
-
-          <div className="sidebar-note">
-            <Sparkles size={17} />
-
-            <div>
-              <strong>Keep going</strong>
-
-              <p>
-                Small wins compound into real skill.
-              </p>
-            </div>
-          </div>
+                  <p>
+                    Small wins compound
+                    into real skill.
+                  </p>
+                </div>
+              </div>
+            </>
+          )}
         </aside>
 
         <main className="main-content">
@@ -861,14 +1032,17 @@ function App() {
             />
           )}
 
-          {activeSection === "profile" && <Profile />}
+          {activeSection === "profile" && (
+            <Profile />
+          )}
 
           {activeSection === "practice" && (
             <>
               <div className="content-intro">
                 <div>
                   <p className="eyebrow warm">
-                    Practice lab <span>·</span>{" "}
+                    Practice lab{" "}
+                    <span>·</span>{" "}
                     {challenge.concept}
                   </p>
 
@@ -918,7 +1092,8 @@ function App() {
                       ? "cpp"
                       : language === "Go"
                       ? "go"
-                      : language === "TypeScript"
+                      : language ===
+                        "TypeScript"
                       ? "ts"
                       : "js"}
                   </div>
@@ -941,11 +1116,13 @@ function App() {
                       )
                     }
                   >
-                    {languages.map((item) => (
-                      <option key={item}>
-                        {item}
-                      </option>
-                    ))}
+                    {languages.map(
+                      (item) => (
+                        <option key={item}>
+                          {item}
+                        </option>
+                      )
+                    )}
                   </select>
                 </div>
 
@@ -954,7 +1131,8 @@ function App() {
                   className="sr-only"
                   htmlFor="code-editor"
                 >
-                  Your solution code in {language}
+                  Your solution code in{" "}
+                  {language}
                 </label>
 
                 <textarea
@@ -962,7 +1140,9 @@ function App() {
                   className="code-editor"
                   value={code}
                   onChange={(event) =>
-                    updateCode(event.target.value)
+                    updateCode(
+                      event.target.value
+                    )
                   }
                   spellCheck={false}
                   aria-describedby="editor-help"
@@ -971,12 +1151,16 @@ function App() {
                 <div className="editor-footer">
                   <span id="editor-help">
                     <Terminal size={14} />{" "}
-                    {language} · controlled challenge
-                    evaluator
+                    {language} · controlled
+                    challenge evaluator
                   </span>
 
                   <span>
-                    {code.split("\n").length} lines
+                    {
+                      code.split("\n")
+                        .length
+                    }{" "}
+                    lines
                   </span>
                 </div>
               </section>
@@ -986,7 +1170,9 @@ function App() {
                   className="inline-message"
                   role="alert"
                 >
-                  <AlertCircle size={17} />{" "}
+                  <AlertCircle
+                    size={17}
+                  />{" "}
                   {message}
                 </div>
               )}
@@ -995,7 +1181,9 @@ function App() {
                 <button
                   className="run-button"
                   onClick={runCode}
-                  disabled={loading !== null}
+                  disabled={
+                    loading !== null
+                  }
                 >
                   <Play
                     size={17}
@@ -1015,7 +1203,9 @@ function App() {
                     hintLevel >= 3
                   }
                 >
-                  <Lightbulb size={17} />
+                  <Lightbulb
+                    size={17}
+                  />
 
                   {loading === "hint"
                     ? "Thinking..."
@@ -1025,7 +1215,9 @@ function App() {
                 <button
                   className="secondary-button"
                   onClick={explainCode}
-                  disabled={loading !== null}
+                  disabled={
+                    loading !== null
+                  }
                 >
                   <BookOpen size={17} />
 
@@ -1038,22 +1230,27 @@ function App() {
                   className="reset-button"
                   onClick={() =>
                     updateCode(
-                      languageStarters[language][
-                        selectedId
-                      ] ?? challenge.starter
+                      languageStarters[
+                        language
+                      ][selectedId] ??
+                        challenge.starter
                     )
                   }
                   aria-label="Reset code"
                   title="Reset code"
                 >
-                  <RotateCcw size={17} />
+                  <RotateCcw
+                    size={17}
+                  />
                 </button>
               </div>
 
               <div className="feedback-grid">
                 <section
                   className={`feedback-panel ${
-                    results ? "has-content" : ""
+                    results
+                      ? "has-content"
+                      : ""
                   }`}
                   aria-live="polite"
                 >
@@ -1063,21 +1260,25 @@ function App() {
                         Verification
                       </p>
 
-                      <h2>Test results</h2>
+                      <h2>
+                        Test results
+                      </h2>
                     </div>
 
                     {results && (
                       <span
                         className={
                           results.every(
-                            (item) => item.passed
+                            (item) =>
+                              item.passed
                           )
                             ? "result-pill success"
                             : "result-pill"
                         }
                       >
                         {results.every(
-                          (item) => item.passed
+                          (item) =>
+                            item.passed
                         )
                           ? "All passed"
                           : "Keep iterating"}
@@ -1087,54 +1288,77 @@ function App() {
 
                   {results ? (
                     <div className="results-list">
-                      {results.map((result) => (
-                        <div
-                          className="result-row"
-                          key={result.label}
-                        >
-                          <span
-                            className={
-                              result.passed
-                                ? "result-icon passed"
-                                : "result-icon failed"
+                      {results.map(
+                        (result) => (
+                          <div
+                            className="result-row"
+                            key={
+                              result.label
                             }
                           >
-                            {result.passed ? (
-                              <Check size={14} />
-                            ) : (
-                              <X size={14} />
-                            )}
-                          </span>
+                            <span
+                              className={
+                                result.passed
+                                  ? "result-icon passed"
+                                  : "result-icon failed"
+                              }
+                            >
+                              {result.passed ? (
+                                <Check
+                                  size={
+                                    14
+                                  }
+                                />
+                              ) : (
+                                <X
+                                  size={
+                                    14
+                                  }
+                                />
+                              )}
+                            </span>
 
-                          <span>
-                            <strong>
-                              {result.label}{" "}
-                              {result.passed
-                                ? "passed"
-                                : "needs work"}
-                            </strong>
+                            <span>
+                              <strong>
+                                {
+                                  result.label
+                                }{" "}
+                                {result.passed
+                                  ? "passed"
+                                  : "needs work"}
+                              </strong>
 
-                            <small>
-                              Expected:{" "}
-                              {result.expected} ·{" "}
-                              {result.received}
-                            </small>
-                          </span>
-                        </div>
-                      ))}
+                              <small>
+                                Expected:{" "}
+                                {
+                                  result.expected
+                                }{" "}
+                                ·{" "}
+                                {
+                                  result.received
+                                }
+                              </small>
+                            </span>
+                          </div>
+                        )
+                      )}
                     </div>
                   ) : (
                     <div className="empty-feedback">
-                      <Terminal size={24} />
+                      <Terminal
+                        size={24}
+                      />
 
                       <p>
-                        Run your solution to see
-                        how it holds up.
+                        Run your solution
+                        to see how it
+                        holds up.
                       </p>
 
                       <span>
-                        Tests are designed to give
-                        you a clear next step.
+                        Tests are designed
+                        to give you a
+                        clear next step.
                       </span>
                     </div>
                   )}
@@ -1142,7 +1366,8 @@ function App() {
 
                 <section
                   className={`feedback-panel ai-panel ${
-                    hint || explanation
+                    hint ||
+                    explanation
                       ? "has-content"
                       : ""
                   }`}
@@ -1154,7 +1379,9 @@ function App() {
                         Tutor notes
                       </p>
 
-                      <h2>AI feedback</h2>
+                      <h2>
+                        AI feedback
+                      </h2>
                     </div>
 
                     <Sparkles
@@ -1166,29 +1393,37 @@ function App() {
                   {hint ? (
                     <div className="hint-content">
                       <span className="hint-label">
-                        HINT {hintLevel}
+                        HINT{" "}
+                        {hintLevel}
 
                         <span className="hint-dots">
                           {[1, 2, 3].map(
                             (level) => (
                               <i
                                 className={
-                                  level <= hintLevel
+                                  level <=
+                                  hintLevel
                                     ? "filled"
                                     : ""
                                 }
-                                key={level}
+                                key={
+                                  level
+                                }
                               />
                             )
                           )}
                         </span>
                       </span>
 
-                      <p>{hint}</p>
+                      <p>
+                        {hint}
+                      </p>
 
                       <small>
-                        Hints get more specific as
-                        you work. You are still
+                        Hints get more
+                        specific as
+                        you work. You
+                        are still
                         driving.
                       </small>
                     </div>
@@ -1199,7 +1434,9 @@ function App() {
                       </strong>
 
                       <p>
-                        {explanation.summary}
+                        {
+                          explanation.summary
+                        }
                       </p>
 
                       <strong>
@@ -1221,7 +1458,8 @@ function App() {
                       </strong>
 
                       <p>
-                        {explanation.issues[0] ??
+                        {explanation
+                          .issues[0] ??
                           "No obvious issues were identified."}
                       </p>
 
@@ -1237,17 +1475,23 @@ function App() {
                     </div>
                   ) : (
                     <div className="empty-feedback">
-                      <Lightbulb size={24} />
+                      <Lightbulb
+                        size={24}
+                      />
 
                       <p>
-                        Your tutor is ready when
-                        you are.
+                        Your tutor is
+                        ready when you
+                        are.
                       </p>
 
                       <span>
-                        Ask for a hint when you
-                        feel stuck, or request an
-                        explanation after you try.
+                        Ask for a hint
+                        when you feel
+                        stuck, or
+                        request an
+                        explanation
+                        after you try.
                       </span>
                     </div>
                   )}
@@ -1255,14 +1499,18 @@ function App() {
               </div>
 
               <div className="footer-tip">
-                <CheckCircle2 size={16} />
+                <CheckCircle2
+                  size={16}
+                />
 
-                Passing all tests marks this
-                challenge complete
+                Passing all tests
+                marks this challenge
+                complete
 
                 <span>·</span>
 
-                Progress saves automatically
+                Progress saves
+                automatically
               </div>
             </>
           )}
@@ -1279,7 +1527,9 @@ function App() {
               ? "active"
               : ""
           }
-          onClick={() => goTo("practice")}
+          onClick={() =>
+            goTo("practice")
+          }
         >
           <Code2 size={20} />
           <span>Practice</span>
@@ -1291,7 +1541,9 @@ function App() {
               ? "active"
               : ""
           }
-          onClick={() => goTo("progress")}
+          onClick={() =>
+            goTo("progress")
+          }
         >
           <BarChart3 size={20} />
           <span>Progress</span>
@@ -1303,9 +1555,13 @@ function App() {
               ? "active"
               : ""
           }
-          onClick={() => goTo("settings")}
+          onClick={() =>
+            goTo("settings")
+          }
         >
-          <SettingsIcon size={20} />
+          <SettingsIcon
+            size={20}
+          />
           <span>Settings</span>
         </button>
 
@@ -1315,7 +1571,9 @@ function App() {
               ? "active"
               : ""
           }
-          onClick={() => goTo("profile")}
+          onClick={() =>
+            goTo("profile")
+          }
         >
           <User size={20} />
           <span>Profile</span>
