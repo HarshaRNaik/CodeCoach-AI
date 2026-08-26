@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const languageSchema = z.enum(["JavaScript", "TypeScript", "Python", "Java", "C++", "Go"]);
+export const languageSchema = z.enum(["JavaScript", "TypeScript", "Python", "Java", "C++", "Go", "C#", "Ruby", "PHP", "Kotlin", "Rust", "Swift", "C", "Dart", "Scala", "R", "Bash"]);
 
 export const hintRequestSchema = z.object({
   challengeId: z.string().trim().min(1),

@@ -54,7 +54,38 @@ const languages: ProgrammingLanguage[] = [
   "Java",
   "C++",
   "Go",
+  "C#",
+  "Ruby",
+  "PHP",
+  "Kotlin",
+  "Rust",
+  "Swift",
+  "C",
+  "Dart",
+  "Scala",
+  "R",
+  "Bash",
 ];
+
+const languageExtensions: Record<ProgrammingLanguage, string> = {
+  JavaScript: "js",
+  TypeScript: "ts",
+  Python: "py",
+  Java: "java",
+  "C++": "cpp",
+  Go: "go",
+  "C#": "cs",
+  Ruby: "rb",
+  PHP: "php",
+  Kotlin: "kt",
+  Rust: "rs",
+  Swift: "swift",
+  C: "c",
+  Dart: "dart",
+  Scala: "scala",
+  R: "r",
+  Bash: "sh",
+};
 
 const languageStarters: Record<
   ProgrammingLanguage,
@@ -89,6 +120,33 @@ console.log(isPalindrome("madam"));`,
     "count-vowels": `function countVowels(word) {
   // Return how many vowels appear in word
 }`,
+    "data-types": `const name = "Alice";
+const age = 30;
+const isStudent = false;
+
+// Log all three variables`,
+    "swap-variables": `let a = 10;
+let b = 20;
+
+// Swap the values of a and b`,
+    "character-frequency": `function characterFrequency(word) {
+  // Return an object/map with character counts
+}`,
+    "find-maximum": `function findMaximum(numbers) {
+  // Return the largest number
+}`,
+    "remove-duplicates": `function removeDuplicates(array) {
+  // Return unique values in original order
+}`,
+    "fibonacci": `function fibonacci(n) {
+  // Return the nth Fibonacci number
+}`,
+    "prime-number": `function isPrime(number) {
+  // Return true if number is prime
+}`,
+    "linear-search": `function linearSearch(array, target) {
+  // Return the index of target or -1
+}`,
   },
 
   Python: {
@@ -119,6 +177,33 @@ print(is_palindrome("madam"))`,
     pass`,
     "count-vowels": `def count_vowels(word):
     # Return how many vowels appear in word
+    pass`,
+    "data-types": `name = "Alice"
+age = 30
+is_student = False
+
+# Print all three variables`,
+    "swap-variables": `a = 10
+b = 20
+
+# Swap the values of a and b`,
+    "character-frequency": `def character_frequency(word):
+    # Return a dictionary with character counts
+    pass`,
+    "find-maximum": `def find_maximum(numbers):
+    # Return the largest number
+    pass`,
+    "remove-duplicates": `def remove_duplicates(array):
+    # Return unique values in original order
+    pass`,
+    "fibonacci": `def fibonacci(n):
+    # Return the nth Fibonacci number
+    pass`,
+    "prime-number": `def is_prime(number):
+    # Return True if number is prime
+    pass`,
+    "linear-search": `def linear_search(array, target):
+    # Return the index of target or -1
     pass`,
   },
 
@@ -151,6 +236,39 @@ const age: number = 28;
     "count-vowels": `function countVowels(word: string): number {
   // Return how many vowels appear in word
   return 0;
+}`,
+    "data-types": `const name: string = "Alice";
+const age: number = 30;
+const isStudent: boolean = false;
+
+// Log all three variables`,
+    "swap-variables": `let a: number = 10;
+let b: number = 20;
+
+// Swap the values of a and b`,
+    "character-frequency": `function characterFrequency(word: string): Record<string, number> {
+  // Return a map with character counts
+  return {};
+}`,
+    "find-maximum": `function findMaximum(numbers: number[]): number {
+  // Return the largest number
+  return 0;
+}`,
+    "remove-duplicates": `function removeDuplicates(array: number[]): number[] {
+  // Return unique values in original order
+  return [];
+}`,
+    "fibonacci": `function fibonacci(n: number): number {
+  // Return the nth Fibonacci number
+  return 0;
+}`,
+    "prime-number": `function isPrime(number: number): boolean {
+  // Return true if number is prime
+  return false;
+}`,
+    "linear-search": `function linearSearch(array: number[], target: number): number {
+  // Return the index of target or -1
+  return -1;
 }`,
   },
 
@@ -200,6 +318,61 @@ const age: number = 28;
   static int countVowels(String word) {
     // Return how many vowels appear in word
     return 0;
+  }
+}`,
+    "data-types": `class Main {
+  public static void main(String[] args) {
+    String name = "Alice";
+    int age = 30;
+    boolean isStudent = false;
+    // Log all three variables
+  }
+}`,
+    "swap-variables": `class Main {
+  public static void main(String[] args) {
+    int a = 10;
+    int b = 20;
+    // Swap the values of a and b
+  }
+}`,
+    "character-frequency": `import java.util.Map;
+
+class Main {
+  static Map<Character, Integer> characterFrequency(String word) {
+    // Return a map with character counts
+    return new HashMap<>();
+  }
+}`,
+    "find-maximum": `class Main {
+  static int findMaximum(int[] numbers) {
+    // Return the largest number
+    return 0;
+  }
+}`,
+    "remove-duplicates": `import java.util.List;
+
+class Main {
+  static List<Integer> removeDuplicates(int[] array) {
+    // Return unique values in original order
+    return new ArrayList<>();
+  }
+}`,
+    "fibonacci": `class Main {
+  static int fibonacci(int n) {
+    // Return the nth Fibonacci number
+    return 0;
+  }
+}`,
+    "prime-number": `class Main {
+  static boolean isPrime(int number) {
+    // Return true if number is prime
+    return false;
+  }
+}`,
+    "linear-search": `class Main {
+  static int linearSearch(int[] array, int target) {
+    // Return the index of target or -1
+    return -1;
   }
 }`,
   },
@@ -252,6 +425,55 @@ int countVowels(std::string word) {
   // Return how many vowels appear in word
   return 0;
 }`,
+    "data-types": `#include <iostream>
+#include <string>
+
+int main() {
+  std::string name = "Alice";
+  int age = 30;
+  bool isStudent = false;
+  // Print all three variables
+}`,
+    "swap-variables": `#include <iostream>
+
+int main() {
+  int a = 10;
+  int b = 20;
+  // Swap the values of a and b
+}`,
+    "character-frequency": `#include <string>
+#include <map>
+
+std::map<char, int> characterFrequency(std::string word) {
+  // Return a map with character counts
+  return {};
+}`,
+    "find-maximum": `#include <vector>
+
+int findMaximum(std::vector<int> numbers) {
+  // Return the largest number
+  return 0;
+}`,
+    "remove-duplicates": `#include <vector>
+
+std::vector<int> removeDuplicates(std::vector<int> array) {
+  // Return unique values in original order
+  return {};
+}`,
+    "fibonacci": `int fibonacci(int n) {
+  // Return the nth Fibonacci number
+  return 0;
+}`,
+    "prime-number": `bool isPrime(int number) {
+  // Return true if number is prime
+  return false;
+}`,
+    "linear-search": `#include <vector>
+
+int linearSearch(std::vector<int> array, int target) {
+  // Return the index of target or -1
+  return -1;
+}`,
   },
 
   Go: {
@@ -297,6 +519,837 @@ func main() {
     "count-vowels": `func countVowels(word string) int {
   // Return how many vowels appear in word
   return 0
+}`,
+    "data-types": `package main
+
+import "fmt"
+
+func main() {
+  name := "Alice"
+  age := 30
+  isStudent := false
+  // Print all three variables
+  _ = fmt.Sprintf
+}`,
+    "swap-variables": `package main
+
+func main() {
+  a := 10
+  b := 20
+  // Swap the values of a and b
+}`,
+    "character-frequency": `func characterFrequency(word string) map[rune]int {
+  // Return a map with character counts
+  return make(map[rune]int)
+}`,
+    "find-maximum": `func findMaximum(numbers []int) int {
+  // Return the largest number
+  return 0
+}`,
+    "remove-duplicates": `func removeDuplicates(array []int) []int {
+  // Return unique values in original order
+  return []int{}
+}`,
+    "fibonacci": `func fibonacci(n int) int {
+  // Return the nth Fibonacci number
+  return 0
+}`,
+    "prime-number": `func isPrime(number int) bool {
+  // Return true if number is prime
+  return false
+}`,
+    "linear-search": `func linearSearch(array []int, target int) int {
+  // Return the index of target or -1
+  return -1
+}`,
+  },
+
+  "C#": {
+    "hello-world": `using System;
+
+class Program {
+  static void Main() {
+    // Print the message below
+  }
+}`,
+    variables: `using System;
+
+class Program {
+  static void Main() {
+    string name = "Ada";
+    int age = 28;
+    // Display a sentence using both variables
+  }
+}`,
+    "two-sum": `static int[] TwoSum(int[] numbers, int target) {
+  // Return the indices of the two matching numbers
+  return new int[]{};
+}`,
+    palindrome: `static bool IsPalindrome(string word) {
+  // Return true when word reads the same backwards
+  return false;
+}`,
+    fizzbuzz: `for (int number = 1; number <= 100; number++) {
+  // Check divisibility before printing the number
+}`,
+    "reverse-string": `static string ReverseString(string word) {
+  // Return word with its characters reversed
+  return "";
+}`,
+    factorial: `static int Factorial(int number) {
+  // Return the product of every integer from 1 to number
+  return 0;
+}`,
+    "count-vowels": `static int CountVowels(string word) {
+  // Return how many vowels appear in word
+  return 0;
+}`,
+    "data-types": `using System;
+
+class Program {
+  static void Main() {
+    string name = "Alice";
+    int age = 30;
+    bool isStudent = false;
+    // Print all three variables
+  }
+}`,
+    "swap-variables": `int a = 10;
+int b = 20;
+// Swap the values of a and b`,
+    "character-frequency": `static Dictionary<char, int> CharacterFrequency(string word) {
+  // Return a dictionary with character counts
+  return new Dictionary<char, int>();
+}`,
+    "find-maximum": `static int FindMaximum(int[] numbers) {
+  // Return the largest number
+  return 0;
+}`,
+    "remove-duplicates": `static List<int> RemoveDuplicates(int[] array) {
+  // Return unique values in original order
+  return new List<int>();
+}`,
+    "fibonacci": `static int Fibonacci(int n) {
+  // Return the nth Fibonacci number
+  return 0;
+}`,
+    "prime-number": `static bool IsPrime(int number) {
+  // Return true if number is prime
+  return false;
+}`,
+    "linear-search": `static int LinearSearch(int[] array, int target) {
+  // Return the index of target or -1
+  return -1;
+}`,
+  },
+
+  Ruby: {
+    "hello-world": `# Print the message below
+puts "Hello, World!"`,
+    variables: `name = "Ada"
+age = 28
+
+# Display a sentence using both variables`,
+    "two-sum": `def two_sum(numbers, target)
+  # Return the indices of the two matching numbers
+end`,
+    palindrome: `def is_palindrome(word)
+  # Return true when word reads the same backwards
+  false
+end`,
+    fizzbuzz: `(1..100).each do |number|
+  # Check divisibility before printing the number
+end`,
+    "reverse-string": `def reverse_string(word)
+  # Return word with its characters reversed
+  ""
+end`,
+    factorial: `def factorial(number)
+  # Return the product of every integer from 1 to number
+  0
+end`,
+    "count-vowels": `def count_vowels(word)
+  # Return how many vowels appear in word
+  0
+end`,
+    "data-types": `name = "Alice"
+age = 30
+is_student = false
+
+# Print all three variables`,
+    "swap-variables": `a = 10
+b = 20
+
+# Swap the values of a and b`,
+    "character-frequency": `def character_frequency(word)
+  # Return a hash with character counts
+  {}
+end`,
+    "find-maximum": `def find_maximum(numbers)
+  # Return the largest number
+  0
+end`,
+    "remove-duplicates": `def remove_duplicates(array)
+  # Return unique values in original order
+  []
+end`,
+    "fibonacci": `def fibonacci(n)
+  # Return the nth Fibonacci number
+  0
+end`,
+    "prime-number": `def is_prime(number)
+  # Return true if number is prime
+  false
+end`,
+    "linear-search": `def linear_search(array, target)
+  # Return the index of target or -1
+  -1
+end`,
+  },
+
+  PHP: {
+    "hello-world": `<?php
+// Print the message below
+echo "Hello, World!";
+?>`,
+    variables: `<?php
+$name = "Ada";
+$age = 28;
+
+// Display a sentence using both variables
+?>`,
+    "two-sum": `<?php
+function twoSum($numbers, $target) {
+  // Return the indices of the two matching numbers
+  return [];
+}
+?>`,
+    palindrome: `<?php
+function isPalindrome($word) {
+  // Return true when word reads the same backwards
+  return false;
+}
+?>`,
+    fizzbuzz: `<?php
+for ($number = 1; $number <= 100; $number++) {
+  // Check divisibility before printing the number
+}
+?>`,
+    "reverse-string": `<?php
+function reverseString($word) {
+  // Return word with its characters reversed
+  return "";
+}
+?>`,
+    factorial: `<?php
+function factorial($number) {
+  // Return the product of every integer from 1 to number
+  return 0;
+}
+?>`,
+    "count-vowels": `<?php
+function countVowels($word) {
+  // Return how many vowels appear in word
+  return 0;
+}
+?>`,
+    "data-types": `<?php
+$name = "Alice";
+$age = 30;
+$is_student = false;
+
+// Print all three variables
+?>`,
+    "swap-variables": `<?php
+$a = 10;
+$b = 20;
+
+// Swap the values of a and b
+?>`,
+    "character-frequency": `<?php
+function characterFrequency($word) {
+  // Return an array with character counts
+  return [];
+}
+?>`,
+    "find-maximum": `<?php
+function findMaximum($numbers) {
+  // Return the largest number
+  return 0;
+}
+?>`,
+    "remove-duplicates": `<?php
+function removeDuplicates($array) {
+  // Return unique values in original order
+  return [];
+}
+?>`,
+    "fibonacci": `<?php
+function fibonacci($n) {
+  // Return the nth Fibonacci number
+  return 0;
+}
+?>`,
+    "prime-number": `<?php
+function isPrime($number) {
+  // Return true if number is prime
+  return false;
+}
+?>`,
+    "linear-search": `<?php
+function linearSearch($array, $target) {
+  // Return the index of target or -1
+  return -1;
+}
+?>`,
+  },
+
+  Kotlin: {
+    "hello-world": `fun main() {
+  // Print the message below
+}`,
+    variables: `fun main() {
+  val name = "Ada"
+  val age = 28
+  // Display a sentence using both variables
+}`,
+    "two-sum": `fun twoSum(numbers: IntArray, target: Int): IntArray {
+  // Return the indices of the two matching numbers
+  return intArrayOf()
+}`,
+    palindrome: `fun isPalindrome(word: String): Boolean {
+  // Return true when word reads the same backwards
+  return false
+}`,
+    fizzbuzz: `fun main() {
+  for (number in 1..100) {
+    // Check divisibility before printing the number
+  }
+}`,
+    "reverse-string": `fun reverseString(word: String): String {
+  // Return word with its characters reversed
+  return ""
+}`,
+    factorial: `fun factorial(number: Int): Int {
+  // Return the product of every integer from 1 to number
+  return 0
+}`,
+    "count-vowels": `fun countVowels(word: String): Int {
+  // Return how many vowels appear in word
+  return 0
+}`,
+    "data-types": `fun main() {
+  val name = "Alice"
+  val age = 30
+  val isStudent = false
+  // Print all three variables
+}`,
+    "swap-variables": `fun main() {
+  var a = 10
+  var b = 20
+  // Swap the values of a and b
+}`,
+    "character-frequency": `fun characterFrequency(word: String): Map<Char, Int> {
+  // Return a map with character counts
+  return mapOf()
+}`,
+    "find-maximum": `fun findMaximum(numbers: IntArray): Int {
+  // Return the largest number
+  return 0
+}`,
+    "remove-duplicates": `fun removeDuplicates(array: IntArray): List<Int> {
+  // Return unique values in original order
+  return listOf()
+}`,
+    "fibonacci": `fun fibonacci(n: Int): Int {
+  // Return the nth Fibonacci number
+  return 0
+}`,
+    "prime-number": `fun isPrime(number: Int): Boolean {
+  // Return true if number is prime
+  return false
+}`,
+    "linear-search": `fun linearSearch(array: IntArray, target: Int): Int {
+  // Return the index of target or -1
+  return -1
+}`,
+  },
+
+  Rust: {
+    "hello-world": `fn main() {
+  // Print the message below
+}`,
+    variables: `fn main() {
+  let name = "Ada";
+  let age = 28;
+  // Display a sentence using both variables
+}`,
+    "two-sum": `fn two_sum(numbers: &[i32], target: i32) -> Vec<usize> {
+  // Return the indices of the two matching numbers
+  vec![]
+}`,
+    palindrome: `fn is_palindrome(word: &str) -> bool {
+  // Return true when word reads the same backwards
+  false
+}`,
+    fizzbuzz: `fn main() {
+  for number in 1..=100 {
+    // Check divisibility before printing the number
+  }
+}`,
+    "reverse-string": `fn reverse_string(word: &str) -> String {
+  // Return word with its characters reversed
+  String::new()
+}`,
+    factorial: `fn factorial(number: i32) -> i32 {
+  // Return the product of every integer from 1 to number
+  0
+}`,
+    "count-vowels": `fn count_vowels(word: &str) -> i32 {
+  // Return how many vowels appear in word
+  0
+}`,
+    "data-types": `fn main() {
+  let name = "Alice";
+  let age = 30;
+  let is_student = false;
+  // Print all three variables
+}`,
+    "swap-variables": `fn main() {
+  let mut a = 10;
+  let mut b = 20;
+  // Swap the values of a and b
+}`,
+    "character-frequency": `use std::collections::HashMap;
+
+fn character_frequency(word: &str) -> HashMap<char, i32> {
+  // Return a map with character counts
+  HashMap::new()
+}`,
+    "find-maximum": `fn find_maximum(numbers: &[i32]) -> i32 {
+  // Return the largest number
+  0
+}`,
+    "remove-duplicates": `fn remove_duplicates(array: &[i32]) -> Vec<i32> {
+  // Return unique values in original order
+  vec![]
+}`,
+    "fibonacci": `fn fibonacci(n: i32) -> i32 {
+  // Return the nth Fibonacci number
+  0
+}`,
+    "prime-number": `fn is_prime(number: i32) -> bool {
+  // Return true if number is prime
+  false
+}`,
+    "linear-search": `fn linear_search(array: &[i32], target: i32) -> i32 {
+  // Return the index of target or -1
+  -1
+}`,
+  },
+
+  Swift: {
+    "hello-world": `import Foundation
+
+// Print the message below
+print("Hello, World!")`,
+    variables: `var name = "Ada"
+var age = 28
+
+// Display a sentence using both variables`,
+    "two-sum": `func twoSum(_ numbers: [Int], _ target: Int) -> [Int] {
+  // Return the indices of the two matching numbers
+  return []
+}`,
+    palindrome: `func isPalindrome(_ word: String) -> Bool {
+  // Return true when word reads the same backwards
+  return false
+}`,
+    fizzbuzz: `for number in 1...100 {
+  // Check divisibility before printing the number
+}`,
+    "reverse-string": `func reverseString(_ word: String) -> String {
+  // Return word with its characters reversed
+  return ""
+}`,
+    factorial: `func factorial(_ number: Int) -> Int {
+  // Return the product of every integer from 1 to number
+  return 0
+}`,
+    "count-vowels": `func countVowels(_ word: String) -> Int {
+  // Return how many vowels appear in word
+  return 0
+}`,
+    "data-types": `var name = "Alice"
+var age = 30
+var isStudent = false
+
+// Print all three variables`,
+    "swap-variables": `var a = 10
+var b = 20
+
+// Swap the values of a and b`,
+    "character-frequency": `func characterFrequency(_ word: String) -> [Character: Int] {
+  // Return a dictionary with character counts
+  return [:]
+}`,
+    "find-maximum": `func findMaximum(_ numbers: [Int]) -> Int {
+  // Return the largest number
+  return 0
+}`,
+    "remove-duplicates": `func removeDuplicates(_ array: [Int]) -> [Int] {
+  // Return unique values in original order
+  return []
+}`,
+    "fibonacci": `func fibonacci(_ n: Int) -> Int {
+  // Return the nth Fibonacci number
+  return 0
+}`,
+    "prime-number": `func isPrime(_ number: Int) -> Bool {
+  // Return true if number is prime
+  return false
+}`,
+    "linear-search": `func linearSearch(_ array: [Int], _ target: Int) -> Int {
+  // Return the index of target or -1
+  return -1
+}`,
+  },
+
+  C: {
+    "hello-world": `#include <stdio.h>
+
+int main(void) {
+  // Print the message below
+  printf("Hello, World!\\n");
+  return 0;
+}`,
+    variables: `#include <stdio.h>
+
+int main(void) {
+  const char *name = "Ada";
+  int age = 28;
+
+  // Display a sentence using both variables
+  return 0;
+}`,
+    "two-sum": `void two_sum(int numbers[], int length, int target, int result[]) {
+  // Return the indices of the two matching numbers
+}`,
+    palindrome: `int is_palindrome(const char *word) {
+  // Return 1 when word reads the same backwards
+  return 0;
+}`,
+    fizzbuzz: `for (int number = 1; number <= 100; number++) {
+  // Check divisibility before printing the number
+}`,
+    "reverse-string": `void reverse_string(char word[]) {
+  // Reverse the characters in word
+}`,
+    factorial: `int factorial(int number) {
+  // Return the product of every integer from 1 to number
+  return 0;
+}`,
+    "count-vowels": `int count_vowels(const char *word) {
+  // Return how many vowels appear in word
+  return 0;
+}`,
+    "data-types": `const char *name = "Alice";
+int age = 30;
+int is_student = 0;
+
+// Print all three variables`,
+    "swap-variables": `int a = 10;
+int b = 20;
+
+// Swap the values of a and b`,
+    "character-frequency": `void character_frequency(const char *word, int counts[256]) {
+  // Fill counts with character frequencies
+}`,
+    "find-maximum": `int find_maximum(int numbers[], int length) {
+  // Return the largest number
+  return 0;
+}`,
+    "remove-duplicates": `int remove_duplicates(int array[], int length, int result[]) {
+  // Return unique values in original order
+  return 0;
+}`,
+    "fibonacci": `int fibonacci(int n) {
+  // Return the nth Fibonacci number
+  return 0;
+}`,
+    "prime-number": `int is_prime(int number) {
+  // Return 1 if number is prime
+  return 0;
+}`,
+    "linear-search": `int linear_search(int array[], int length, int target) {
+  // Return the index of target or -1
+  return -1;
+}`,
+  },
+
+  Dart: {
+    "hello-world": `void main() {
+  // Print the message below
+  print("Hello, World!");
+}`,
+    variables: `final name = "Ada";
+final age = 28;
+
+// Display a sentence using both variables`,
+    "two-sum": `List<int> twoSum(List<int> numbers, int target) {
+  // Return the indices of the two matching numbers
+  return [];
+}`,
+    palindrome: `bool isPalindrome(String word) {
+  // Return true when word reads the same backwards
+  return false;
+}`,
+    fizzbuzz: `for (var number = 1; number <= 100; number++) {
+  // Check divisibility before printing the number
+}`,
+    "reverse-string": `String reverseString(String word) {
+  // Return word with its characters reversed
+  return "";
+}`,
+    factorial: `int factorial(int number) {
+  // Return the product of every integer from 1 to number
+  return 0;
+}`,
+    "count-vowels": `int countVowels(String word) {
+  // Return how many vowels appear in word
+  return 0;
+}`,
+    "data-types": `final name = "Alice";
+final age = 30;
+final isStudent = false;
+
+// Print all three variables`,
+    "swap-variables": `var a = 10;
+var b = 20;
+
+// Swap the values of a and b`,
+    "character-frequency": `Map<String, int> characterFrequency(String word) {
+  // Return a map with character counts
+  return {};
+}`,
+    "find-maximum": `int findMaximum(List<int> numbers) {
+  // Return the largest number
+  return 0;
+}`,
+    "remove-duplicates": `List<int> removeDuplicates(List<int> array) {
+  // Return unique values in original order
+  return [];
+}`,
+    "fibonacci": `int fibonacci(int n) {
+  // Return the nth Fibonacci number
+  return 0;
+}`,
+    "prime-number": `bool isPrime(int number) {
+  // Return true if number is prime
+  return false;
+}`,
+    "linear-search": `int linearSearch(List<int> array, int target) {
+  // Return the index of target or -1
+  return -1;
+}`,
+  },
+
+  Scala: {
+    "hello-world": `object Solution extends App {
+  // Print the message below
+  println("Hello, World!")
+}`,
+    variables: `val name = "Ada"
+val age = 28
+
+// Display a sentence using both variables`,
+    "two-sum": `def twoSum(numbers: Array[Int], target: Int): Array[Int] = {
+  // Return the indices of the two matching numbers
+  Array()
+}`,
+    palindrome: `def isPalindrome(word: String): Boolean = {
+  // Return true when word reads the same backwards
+  false
+}`,
+    fizzbuzz: `for (number <- 1 to 100) {
+  // Check divisibility before printing the number
+}`,
+    "reverse-string": `def reverseString(word: String): String = {
+  // Return word with its characters reversed
+  ""
+}`,
+    factorial: `def factorial(number: Int): Int = {
+  // Return the product of every integer from 1 to number
+  0
+}`,
+    "count-vowels": `def countVowels(word: String): Int = {
+  // Return how many vowels appear in word
+  0
+}`,
+    "data-types": `val name = "Alice"
+val age = 30
+val isStudent = false
+
+// Print all three variables`,
+    "swap-variables": `var a = 10
+var b = 20
+
+// Swap the values of a and b`,
+    "character-frequency": `def characterFrequency(word: String): Map[Char, Int] = {
+  // Return a map with character counts
+  Map()
+}`,
+    "find-maximum": `def findMaximum(numbers: Array[Int]): Int = {
+  // Return the largest number
+  0
+}`,
+    "remove-duplicates": `def removeDuplicates(array: Array[Int]): Array[Int] = {
+  // Return unique values in original order
+  Array()
+}`,
+    "fibonacci": `def fibonacci(n: Int): Int = {
+  // Return the nth Fibonacci number
+  0
+}`,
+    "prime-number": `def isPrime(number: Int): Boolean = {
+  // Return true if number is prime
+  false
+}`,
+    "linear-search": `def linearSearch(array: Array[Int], target: Int): Int = {
+  // Return the index of target or -1
+  -1
+}`,
+  },
+
+  R: {
+    "hello-world": `# Print the message below
+print("Hello, World!")`,
+    variables: `name <- "Ada"
+age <- 28
+
+# Display a sentence using both variables`,
+    "two-sum": `two_sum <- function(numbers, target) {
+  # Return the indices of the two matching numbers
+  c()
+}`,
+    palindrome: `is_palindrome <- function(word) {
+  # Return TRUE when word reads the same backwards
+  FALSE
+}`,
+    fizzbuzz: `for (number in 1:100) {
+  # Check divisibility before printing the number
+}`,
+    "reverse-string": `reverse_string <- function(word) {
+  # Return word with its characters reversed
+  ""
+}`,
+    factorial: `factorial_number <- function(number) {
+  # Return the product of every integer from 1 to number
+  0
+}`,
+    "count-vowels": `count_vowels <- function(word) {
+  # Return how many vowels appear in word
+  0
+}`,
+    "data-types": `name <- "Alice"
+age <- 30
+is_student <- FALSE
+
+# Print all three variables`,
+    "swap-variables": `a <- 10
+b <- 20
+
+# Swap the values of a and b`,
+    "character-frequency": `character_frequency <- function(word) {
+  # Return a named vector/table with character counts
+  table(strsplit(word, "")[[1]])
+}`,
+    "find-maximum": `find_maximum <- function(numbers) {
+  # Return the largest number
+  0
+}`,
+    "remove-duplicates": `remove_duplicates <- function(array) {
+  # Return unique values in original order
+  c()
+}`,
+    "fibonacci": `fibonacci <- function(n) {
+  # Return the nth Fibonacci number
+  0
+}`,
+    "prime-number": `is_prime <- function(number) {
+  # Return TRUE if number is prime
+  FALSE
+}`,
+    "linear-search": `linear_search <- function(array, target) {
+  # Return the index of target or -1
+  -1
+}`,
+  },
+
+  Bash: {
+    "hello-world": `#!/usr/bin/env bash
+
+# Print the message below
+echo "Hello, World!"`,
+    variables: `name="Ada"
+age=28
+
+# Display a sentence using both variables`,
+    "two-sum": `two_sum() {
+  # Return the indices of the two matching numbers
+  local target="$1"
+}`,
+    palindrome: `is_palindrome() {
+  # Return true when word reads the same backwards
+  local word="$1"
+}`,
+    fizzbuzz: `for number in {1..100}; do
+  # Check divisibility before printing the number
+done`,
+    "reverse-string": `reverse_string() {
+  # Return word with its characters reversed
+  local word="$1"
+}`,
+    factorial: `factorial() {
+  # Return the product of every integer from 1 to number
+  local number="$1"
+}`,
+    "count-vowels": `count_vowels() {
+  # Return how many vowels appear in word
+  local word="$1"
+}`,
+    "data-types": `name="Alice"
+age=30
+is_student=false
+
+# Print all three variables`,
+    "swap-variables": `a=10
+b=20
+
+# Swap the values of a and b`,
+    "character-frequency": `character_frequency() {
+  # Print character counts for a word
+  local word="$1"
+}`,
+    "find-maximum": `find_maximum() {
+  # Return the largest number
+  local numbers=("$@")
+}`,
+    "remove-duplicates": `remove_duplicates() {
+  # Return unique values in original order
+  local values=("$@")
+}`,
+    "fibonacci": `fibonacci() {
+  # Return the nth Fibonacci number
+  local n="$1"
+}`,
+    "prime-number": `is_prime() {
+  # Return true if number is prime
+  local number="$1"
+}`,
+    "linear-search": `linear_search() {
+  # Return the index of target or -1
+  local target="$1"
 }`,
   },
 };
@@ -401,6 +1454,105 @@ console.log(isPalindrome("madam"));`,
   // Return how many vowels appear in word
 }`,
     concept: "character checks",
+  },
+  {
+    id: "data-types",
+    title: "Data Types",
+    difficulty: "Easy",
+    description:
+      "Create variables representing a person's name, age, and whether they are a student. Use appropriate data types for each value.",
+    example: 'name = "Alice", age = 30, isStudent = false',
+    starter: `const name = "Alice";
+const age = 30;
+const isStudent = false;
+
+// Log all three variables`,
+    concept: "data types",
+  },
+  {
+    id: "swap-variables",
+    title: "Swap Variables",
+    difficulty: "Easy",
+    description:
+      "Swap the values of two variables so that each variable contains the value previously stored in the other variable.",
+    example: "a = 10, b = 20 → a = 20, b = 10",
+    starter: `let a = 10;
+let b = 20;
+
+// Swap the values of a and b`,
+    concept: "variable assignment",
+  },
+  {
+    id: "character-frequency",
+    title: "Character Frequency",
+    difficulty: "Easy",
+    description:
+      "Count how many times each character appears in a given string.",
+    example: '"hello" → h:1, e:1, l:2, o:1',
+    starter: `function characterFrequency(word) {
+  // Return an object/map with character counts
+}`,
+    concept: "hash maps",
+  },
+  {
+    id: "find-maximum",
+    title: "Find Maximum",
+    difficulty: "Easy",
+    description:
+      "Find and return the largest number in an array of integers.",
+    example: "[3, 7, 2, 9, 4] → 9",
+    starter: `function findMaximum(numbers) {
+  // Return the largest number
+}`,
+    concept: "array iteration",
+  },
+  {
+    id: "remove-duplicates",
+    title: "Remove Duplicates",
+    difficulty: "Easy / Medium",
+    description:
+      "Return an array containing the unique values from the input array while preserving their original order.",
+    example: "[1, 2, 2, 3, 1] → [1, 2, 3]",
+    starter: `function removeDuplicates(array) {
+  // Return unique values in original order
+}`,
+    concept: "arrays and sets",
+  },
+  {
+    id: "fibonacci",
+    title: "Fibonacci",
+    difficulty: "Easy",
+    description:
+      "Return the nth Fibonacci number, where the sequence starts with 0 and 1.",
+    example: "fib(6) → 8",
+    starter: `function fibonacci(n) {
+  // Return the nth Fibonacci number
+}`,
+    concept: "recursion",
+  },
+  {
+    id: "prime-number",
+    title: "Prime Number",
+    difficulty: "Easy",
+    description:
+      "Determine whether a given integer is a prime number.",
+    example: "7 → true · 10 → false",
+    starter: `function isPrime(number) {
+  // Return true if number is prime
+}`,
+    concept: "conditionals",
+  },
+  {
+    id: "linear-search",
+    title: "Linear Search",
+    difficulty: "Easy",
+    description:
+      "Search an array for a target value and return its index. Return -1 if the target is not present.",
+    example: "[4, 8, 15, 16], target 15 → 2",
+    starter: `function linearSearch(array, target) {
+  // Return the index of target or -1
+}`,
+    concept: "array search",
   },
 ];
 
@@ -1083,19 +2235,7 @@ function App() {
                   <div className="file-tab">
                     <span className="file-dot" />
 
-                    solution.
-                    {language === "Python"
-                      ? "py"
-                      : language === "Java"
-                      ? "java"
-                      : language === "C++"
-                      ? "cpp"
-                      : language === "Go"
-                      ? "go"
-                      : language ===
-                        "TypeScript"
-                      ? "ts"
-                      : "js"}
+                    solution.{languageExtensions[language]}
                   </div>
 
                   <label

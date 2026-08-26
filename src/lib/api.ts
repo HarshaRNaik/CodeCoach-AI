@@ -1,6 +1,6 @@
 export type HintResponse = { hint: string; level: number };
 export type ExplanationResponse = { summary: string; steps: string[]; issues: string[]; learningTakeaway: string };
-export type ProgrammingLanguage = "JavaScript" | "TypeScript" | "Python" | "Java" | "C++" | "Go";
+export type ProgrammingLanguage = "JavaScript" | "TypeScript" | "Python" | "Java" | "C++" | "Go" | "C#" | "Ruby" | "PHP" | "Kotlin" | "Rust" | "Swift" | "C" | "Dart" | "Scala" | "R" | "Bash";
 import type { TestResult } from "../../shared/evaluator";
 
 export class ApiError extends Error {

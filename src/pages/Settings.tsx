@@ -58,6 +58,17 @@ function Settings({
             <option>Java</option>
             <option>C++</option>
             <option>Go</option>
+            <option>C#</option>
+            <option>Ruby</option>
+            <option>PHP</option>
+            <option>Kotlin</option>
+            <option>Rust</option>
+            <option>Swift</option>
+            <option>C</option>
+            <option>Dart</option>
+            <option>Scala</option>
+            <option>R</option>
+            <option>Bash</option>
           </select>
         </div>
       </div>
